@@ -42,18 +42,19 @@
   <div id="hint">Touchez l'image pour choisir la couleur à remplacer</div>
 </div>
 <div id="panel">
-  <div class="row" style="flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px;">
+  <div class="row">
     <div id="swatch" title="Couleur ciblée"></div>
-    <input type="color" id="color" value="#00ff00" style="width: 40px; height: 40px; border: none; border-radius: 8px; cursor: pointer; flex-shrink: 0;">
-    <label class="btn" for="bgFile" style="font-size: 16px; padding: 8px 10px;">🖼</label>
+    <input type="color" id="color" value="#00ff00" aria-label="Couleur à remplacer">
+    <label class="btn" for="bgFile">🖼 Fond</label>
     <input type="file" id="bgFile" accept="image/*">
-    <label class="btn" for="mediaFile" style="font-size: 16px; padding: 8px 10px;">📂</label>
+    <label class="btn" for="mediaFile">📂 Photo/Vidéo</label>
     <input type="file" id="mediaFile" accept="image/*,video/*">
-    <button id="cam" style="font-size: 16px; padding: 8px 10px;">📷</button>
-    <button id="flip" style="font-size: 16px; padding: 8px 10px;">🔄</button>
-    <button id="settings" style="font-size: 16px; padding: 8px 10px;">⚙</button>
-    <button id="install" style="font-size: 16px; padding: 8px 10px;">⬇</button>
+    <button id="cam">📷 Caméra</button>
+    <button id="flip">🔄 Changer de caméra</button>
+    <button id="settings">⚙ Paramètres</button>
+    <button id="install">⬇ Installer</button>
   </div>
+  <button id="update" hidden>Une mise à jour est disponible : actualiser</button>
   <div class="row"><label>Tolérance</label><input type="range" id="tol" min="0" max="255" value="70"></div>
   <div class="row"><label>Adoucissement</label><input type="range" id="soft" min="0" max="100" value="30"></div>
   <div class="row">
@@ -267,7 +268,21 @@ $('install').onclick = async () => {
   if (!deferred) return;
   deferred.prompt(); await deferred.userChoice; deferred = null; $('install').style.display = 'none';
 };
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+if ('serviceWorker' in navigator) {
+  let wasControlled = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (wasControlled) $('update').hidden = false;
+    wasControlled = true;
+  });
+  $('update').onclick = () => location.reload();
+  navigator.serviceWorker.register('sw.js').then(registration => {
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        registration.update().catch(err => console.warn('Vérification de mise à jour impossible :', err));
+      }
+    });
+  }).catch(err => console.error('Service worker indisponible :', err));
+}
 
 setKey(0, 255, 0);
 startCam();
