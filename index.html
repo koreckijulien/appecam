@@ -19,12 +19,13 @@
   .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .row label { font-size: 12px; min-width: 70px; }
   .row input[type=range] { flex: 1; min-width: 100px; }
-  button, .btn { background: #333; color: #fff; border: 0; border-radius: 10px; padding: 10px 12px; font-size: 14px; flex-shrink: 0; cursor: pointer; }
+  button, .btn { background: #333; color: #fff; border: 0; border-radius: 10px; padding: 10px 12px; font-size: 14px; flex-shrink: 0; cursor: pointer; white-space: nowrap; }
   button.primary { background: #2b7cff; }
   button.rec { background: #d32f2f; }
   #swatch { width: 36px; height: 36px; border-radius: 8px; border: 2px solid #fff; background: #00ff00; flex-shrink: 0; }
   #install { display: none; }
   input[type=file] { display: none; }
+  #settings { background: #555; font-weight: bold; }
   
   #modal { display: none; position: fixed; inset: 0; background: #000a; z-index: 1000; align-items: center; justify-content: center; }
   #modal.show { display: flex; }
@@ -41,23 +42,23 @@
   <div id="hint">Touchez l'image pour choisir la couleur à remplacer</div>
 </div>
 <div id="panel">
-  <div class="row">
+  <div class="row" style="flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px;">
     <div id="swatch" title="Couleur ciblée"></div>
-    <input type="color" id="color" value="#00ff00">
-    <label class="btn" for="bgFile">🖼 Fond</label>
+    <input type="color" id="color" value="#00ff00" style="width: 40px; height: 40px; border: none; border-radius: 8px; cursor: pointer; flex-shrink: 0;">
+    <label class="btn" for="bgFile" style="font-size: 16px; padding: 8px 10px;">🖼</label>
     <input type="file" id="bgFile" accept="image/*">
-    <label class="btn" for="mediaFile">📂 Photo/Vidéo</label>
+    <label class="btn" for="mediaFile" style="font-size: 16px; padding: 8px 10px;">📂</label>
     <input type="file" id="mediaFile" accept="image/*,video/*">
-    <button id="cam">📷 Caméra</button>
-    <button id="flip">🔄</button>
-    <button id="settings">⚙</button>
-    <button id="install">⬇ Installer</button>
+    <button id="cam" style="font-size: 16px; padding: 8px 10px;">📷</button>
+    <button id="flip" style="font-size: 16px; padding: 8px 10px;">🔄</button>
+    <button id="settings" style="font-size: 16px; padding: 8px 10px;">⚙</button>
+    <button id="install" style="font-size: 16px; padding: 8px 10px;">⬇</button>
   </div>
   <div class="row"><label>Tolérance</label><input type="range" id="tol" min="0" max="255" value="70"></div>
   <div class="row"><label>Adoucissement</label><input type="range" id="soft" min="0" max="100" value="30"></div>
   <div class="row">
-    <button class="primary" id="snap">📸 Photo</button>
-    <button id="rec">⏺ Vidéo</button>
+    <button class="primary" id="snap" style="flex: 1;">📸 Photo</button>
+    <button id="rec" style="flex: 1;">⏺ Vidéo</button>
   </div>
 </div>
 
